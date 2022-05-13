@@ -30,13 +30,15 @@ async function run() {
     });
 
     // get items
-    app.get("/item/:id", async (req, res) => {
+    app.get("/inventory/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const item = await itemCollection.findOne(query);
       console.log(item);
       res.send(item);
     });
+
+    // POST
   } finally {
   }
 }
