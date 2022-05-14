@@ -47,13 +47,12 @@ async function run() {
 
     // PUT
     app.put("/inventory/:id", async (req, res) => {
+      const id = req.params.id;
       const quantity = req.body;
       const result = await itemCollection.updateOne(
-        { quantity: quantity },
-        { $set: { quantity: quantity } },
-        { upsert: true }
+        { id },
+        { $set: { quantity: qauntity } }
       );
-
       res.send(result);
     });
   } finally {
