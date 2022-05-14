@@ -50,7 +50,6 @@ async function run() {
       const id = req.params.id;
       const updateQuantity = req.body;
       const filter = { _id: ObjectId(id) };
-      const options = ;
 
       const document = {
         $set: {
@@ -58,9 +57,9 @@ async function run() {
         },
       };
 
-      const result = await itemCollection.updateOne(
-        filter, document, { upsert: true }
-      );
+      const result = await itemCollection.updateOne(filter, document, {
+        upsert: true,
+      });
       res.send(result);
     });
   } finally {
