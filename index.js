@@ -51,7 +51,7 @@ async function run() {
       const quantity = req.body;
       const result = await itemCollection.updateOne(
         { id },
-        { $set: { quantity: qauntity } }
+        { $set: { quantity: "qauntity" } }
       );
       res.send(result);
     });
