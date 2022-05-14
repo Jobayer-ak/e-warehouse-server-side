@@ -41,7 +41,8 @@ async function run() {
     // PUT
     app.put("/inventory/:id", async (req, res) => {
       const id = req.params.id;
-      const quantityOfItem = req.body.quantity;
+      const quantityOfItem = req.params.quantity;
+      console.log(quantityOfItem);
       //find id
       const query = { _id: ObjectId(id) };
       const cursor = itemCollection.findOne(query);
