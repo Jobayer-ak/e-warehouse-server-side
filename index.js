@@ -46,11 +46,10 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const cursor = itemCollection.findOne(query);
       const updateQuantity = await cursor.updateOne(
-        { _id: id },
-        { $set: { quantity: quantityOfItem } },
-        { new: true }
+        { quantity: quantityOfItem },
+        { $set: { quantity: quantityOfItem } }
       );
-      res(updateQuantity);
+      res.send(updateQuantity);
     });
   } finally {
   }
