@@ -46,7 +46,7 @@ async function run() {
     });
 
     // PUT
-    app.put("/items/:id", async (req, res) => {
+    app.put("/inventory/:id", async (req, res) => {
       const id = req.params.id;
       const quantityOfItem = req.params.quantity;
       console.log(quantityOfItem);
