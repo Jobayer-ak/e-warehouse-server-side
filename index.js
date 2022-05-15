@@ -23,6 +23,7 @@ async function run() {
 
     // items api
     app.get("/items", async (req, res) => {
+      // console.log(req.body);
       const query = {};
       const cursor = itemCollection.find(query);
       const items = await cursor.toArray();
@@ -32,34 +33,46 @@ async function run() {
     // get items
     app.get("/inventory/:id", async (req, res) => {
       const id = req.params.id;
+      console.log(req.params.quantity);
       const query = { _id: ObjectId(id) };
       const item = await itemCollection.findOne(query);
       console.log(item);
       res.send(item);
     });
 
-    // POST
+    // ADD
     app.post("/items", async (req, res) => {
       const newItem = req.body;
       const result = await itemCollection.insertOne(newItem);
       res.send(result);
     });
 
-    // PUT
+    // Delete
+    app.delete("/inventory/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await itemCollection.deleteOne(query);
+
+      res.send(result);
+    });
+
+    // update
     app.put("/inventory/:id", async (req, res) => {
       const id = req.params.id;
-      const updateQuantity = req.body;
+      const data = req.body;
+      // console.log(data);
       const filter = { _id: ObjectId(id) };
-
-      const document = {
+      const options = {
+        upsert: true,
+      };
+      const updateDoc = {
         $set: {
-          quantity: updateQuantity,
+          quantity: data.quantity,
         },
       };
 
-      const result = await itemCollection.updateOne(filter, document, {
-        upsert: true,
-      });
+      const result = await itemCollection.updateOne(filter, updateDoc, options);
+      // console.log(result);
       res.send(result);
     });
   } finally {
@@ -76,3 +89,20 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log("Listening to port", port);
 });
+
+// update user
+// app.put('/user/:id', async(req, res) =>{
+//   const id = req.params.id;
+//   const updatedUser = req.body;
+//   const filter = {_id: ObjectId(id)};
+//   const options = { upsert: true };
+//   const updatedDoc = {
+//       $set: {
+//           name: updatedUser.name,
+//           email: updatedUser.email
+//       }
+//   };
+//   const result = await userCollection.updateOne(filter, updatedDoc, options);
+//   res.send(result);
+
+// })
