@@ -25,13 +25,14 @@ async function run() {
     // Auth
     app.post("/login", async (req, res) => {
       const user = req.body;
-      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECTRET);
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECTRET, {
+        expiresIn: "1h",
+      });
       res.send({ accessToken });
     });
 
     // items api
     app.get("/items", async (req, res) => {
-      // console.log(req.body);
       const query = {};
       const cursor = itemCollection.find(query);
       const items = await cursor.toArray();
@@ -44,7 +45,7 @@ async function run() {
       console.log(req.params.quantity);
       const query = { _id: ObjectId(id) };
       const item = await itemCollection.findOne(query);
-      console.log(item);
+
       res.send(item);
     });
 
@@ -68,7 +69,7 @@ async function run() {
     app.put("/inventory/:id", async (req, res) => {
       const id = req.params.id;
       const data = req.body;
-      // console.log(data);
+
       const filter = { _id: ObjectId(id) };
       const options = {
         upsert: true,
@@ -80,7 +81,7 @@ async function run() {
       };
 
       const result = await itemCollection.updateOne(filter, updateDoc, options);
-      // console.log(result);
+
       res.send(result);
     });
   } finally {
@@ -89,7 +90,6 @@ async function run() {
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
-  console.log(req);
   res.send("Running Server");
 });
 
@@ -97,20 +97,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log("Listening to port", port);
 });
-
-// update user
-// app.put('/user/:id', async(req, res) =>{
-//   const id = req.params.id;
-//   const updatedUser = req.body;
-//   const filter = {_id: ObjectId(id)};
-//   const options = { upsert: true };
-//   const updatedDoc = {
-//       $set: {
-//           name: updatedUser.name,
-//           email: updatedUser.email
-//       }
-//   };
-//   const result = await userCollection.updateOne(filter, updatedDoc, options);
-//   res.send(result);
-
-// })
