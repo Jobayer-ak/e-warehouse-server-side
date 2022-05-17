@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+var jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
@@ -20,6 +21,13 @@ async function run() {
   try {
     await client.connect();
     const itemCollection = client.db("eWarehouse").collection("items");
+
+    // Auth
+    app.post("/login", async (req, res) => {
+      const user = req.body;
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECTRET);
+      res.send({ accessToken });
+    });
 
     // items api
     app.get("/items", async (req, res) => {
